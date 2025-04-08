@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Filtro por Fecha -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Filtrar por fecha"
+        android:textStyle="bold"/>
+
+    <EditText
+        android:id="@+id/etDate"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:hint="dd/mm/aaaa"
+        android:inputType="date"/>
+
+    <!-- Filtro por Ubicación -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Filtrar por ubicación"
+        android:textStyle="bold"/>
+
+    <EditText
+        android:id="@+id/etLocation"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:hint="Ingrese ubicación"/>
+
+    <!-- Filtro por Estado -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Filtrar por estado"
+        android:textStyle="bold"/>
+
+    <CheckBox
+        android:id="@+id/cbCompleted"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Actividades realizadas"/>
+
+    <CheckBox
+        android:id="@+id/cbUpcoming"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Próximas actividades"/>
+
+    <CheckBox
+        android:id="@+id/cbOngoing"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Actividades en curso"/>
+
+    <!-- Botón de aplicar filtros -->
+    <Button
+        android:id="@+id/btnApplyFilters"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Aplicar Filtros"/>
+
+</LinearLayout>
