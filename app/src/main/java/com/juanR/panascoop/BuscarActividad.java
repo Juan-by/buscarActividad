@@ -3,10 +3,12 @@ import com.framents.filtros;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,6 +24,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import android.content.Intent;
+import android.view.animation.Animation;
+import android.widget.LinearLayout;
+
 
 public class BuscarActividad extends AppCompatActivity implements filtros.FilterListener {
     private EditText etSearch;
@@ -30,11 +36,25 @@ public class BuscarActividad extends AppCompatActivity implements filtros.Filter
     private ActivitiesAdapter adapter;
     private List<Activity> activitiesList = new ArrayList<>();
     private List<Activity> filteredList = new ArrayList<>();
+    private LinearLayout menuDrawer;
+    private boolean isMenuOpen = false;
+    private Animation slideIn, slideOut;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.buscar_actividad);
+
+        slideIn = AnimationUtils.loadAnimation(this, R.anim.slide_in);
+        slideOut = AnimationUtils.loadAnimation(this, R.anim.slide_out);
+
+        menuDrawer = findViewById(R.id.menuDrawer);
+        AppCompatImageButton btnMenu = findViewById(R.id.btnMenu);
+        // Botón hamburguesa
+        btnMenu.setOnClickListener(v -> toggleMenu());
+
+        // Configurar listeners para cada opción del menú
+        setupMenuButtons();
 
         // Inicializar vistas
         etSearch = findViewById(R.id.etSearch);
@@ -54,6 +74,65 @@ public class BuscarActividad extends AppCompatActivity implements filtros.Filter
         btnSearch.setOnClickListener(v -> performSearch());
         btnFilters.setOnClickListener(v -> showFiltersDialog());
     }
+
+    private void toggleMenu(){
+        if (isMenuOpen)
+        {
+            menuDrawer.startAnimation(slideOut);
+            menuDrawer.setVisibility(View.GONE);
+        }else {
+            menuDrawer.startAnimation(slideIn);
+            menuDrawer.setVisibility(View.VISIBLE);
+        }
+        isMenuOpen  = !isMenuOpen;
+    }
+    private void setupMenuButtons() {
+        findViewById(R.id.btnActivityList).setOnClickListener(v -> {
+            startActivity(new Intent(this, ListaActividadesActivity.class));
+            closeMenu();
+        });
+
+        findViewById(R.id.btnSearchFilter).setOnClickListener(v -> closeMenu());
+
+        findViewById(R.id.btnPromotedActivities).setOnClickListener(v -> {
+            startActivity(new Intent(this, ActividadesPromocionadasActivity.class));
+            closeMenu();
+        });
+
+        findViewById(R.id.btnNotificationSettings).setOnClickListener(v -> {
+            startActivity(new Intent(this, ConfigurarNotificacionesActivity.class));
+            closeMenu();
+        });
+
+        findViewById(R.id.btnSocialMedia).setOnClickListener(v -> {
+            startActivity(new Intent(this, PublicarRedesSocialesActivity.class));
+            closeMenu();
+        });
+
+        findViewById(R.id.btnAttendanceManagement).setOnClickListener(v -> {
+            startActivity(new Intent(this, GestionarAsistenciaActivity.class));
+            closeMenu();
+        });
+    }
+
+    private void closeMenu() {
+        if (isMenuOpen) {
+            menuDrawer.startAnimation(slideOut);
+            menuDrawer.setVisibility(View.GONE);
+            isMenuOpen = false;
+        }
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        if (isMenuOpen) {
+            closeMenu();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
 
     private void loadSampleData() {
         activitiesList.clear();
