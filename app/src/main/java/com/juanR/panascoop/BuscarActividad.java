@@ -1,4 +1,5 @@
 package com.juanR.panascoop;
+
 import com.framents.filtros;
 
 import android.os.Bundle;
@@ -28,10 +29,9 @@ import android.content.Intent;
 import android.view.animation.Animation;
 import android.widget.LinearLayout;
 
-
 public class BuscarActividad extends AppCompatActivity implements filtros.FilterListener {
     private EditText etSearch;
-    private Button btnSearch, btnFilters;
+    private Button btnSearch, btnFilters, btnNewActivity;
     private RecyclerView rvActivities;
     private ActivitiesAdapter adapter;
     private List<Activity> activitiesList = new ArrayList<>();
@@ -50,42 +50,37 @@ public class BuscarActividad extends AppCompatActivity implements filtros.Filter
 
         menuDrawer = findViewById(R.id.menuDrawer);
         AppCompatImageButton btnMenu = findViewById(R.id.btnMenu);
-        // Botón hamburguesa
         btnMenu.setOnClickListener(v -> toggleMenu());
 
-        // Configurar listeners para cada opción del menú
         setupMenuButtons();
 
-        // Inicializar vistas
         etSearch = findViewById(R.id.etSearch);
         btnSearch = findViewById(R.id.btnSearch);
         btnFilters = findViewById(R.id.btnFilters);
+        btnNewActivity = findViewById(R.id.btnNewActivity);
         rvActivities = findViewById(R.id.rvActivities);
 
-        // Configurar RecyclerView
         rvActivities.setLayoutManager(new LinearLayoutManager(this));
         adapter = new ActivitiesAdapter(filteredList);
         rvActivities.setAdapter(adapter);
 
-        // Cargar datos de ejemplo
         loadSampleData();
-
-        // Listeners
         btnSearch.setOnClickListener(v -> performSearch());
         btnFilters.setOnClickListener(v -> showFiltersDialog());
+        btnNewActivity.setOnClickListener(v -> startActivity(new Intent(this, CrearActividadActivity.class)));
     }
 
-    private void toggleMenu(){
-        if (isMenuOpen)
-        {
+    private void toggleMenu() {
+        if (isMenuOpen) {
             menuDrawer.startAnimation(slideOut);
             menuDrawer.setVisibility(View.GONE);
-        }else {
+        } else {
             menuDrawer.startAnimation(slideIn);
             menuDrawer.setVisibility(View.VISIBLE);
         }
-        isMenuOpen  = !isMenuOpen;
+        isMenuOpen = !isMenuOpen;
     }
+
     private void setupMenuButtons() {
         findViewById(R.id.btnActivityList).setOnClickListener(v -> {
             startActivity(new Intent(this, ListaActividadesActivity.class));
@@ -123,7 +118,6 @@ public class BuscarActividad extends AppCompatActivity implements filtros.Filter
         }
     }
 
-
     @Override
     public void onBackPressed() {
         if (isMenuOpen) {
@@ -133,33 +127,17 @@ public class BuscarActividad extends AppCompatActivity implements filtros.Filter
         }
     }
 
-
     private void loadSampleData() {
         activitiesList.clear();
         filteredList.clear();
 
-        // Usar Calendar para fechas
         Calendar calendar = Calendar.getInstance();
 
-        // Actividad 1
-        calendar.set(2025, Calendar.OCTOBER, 10); // 10/10/2025
-        activitiesList.add(new Activity(
-                "Recogida de basura",
-                "Ayuda a limpiar el parque central",
-                calendar.getTime(),
-                "Parque Central",
-                "upcoming"
-        ));
+        calendar.set(2025, Calendar.OCTOBER, 10);
+        activitiesList.add(new Activity("Recogida de basura", "Ayuda a limpiar el parque central", calendar.getTime(), "Parque Central", "upcoming"));
 
-        // Actividad 2
-        calendar.set(2025, Calendar.SEPTEMBER, 15); // 15/09/2025
-        activitiesList.add(new Activity(
-                "Donación de sangre",
-                "Campaña de donación de sangre",
-                calendar.getTime(),
-                "Hospital General",
-                "completed"
-        ));
+        calendar.set(2025, Calendar.SEPTEMBER, 15);
+        activitiesList.add(new Activity("Donación de sangre", "Campaña de donación de sangre", calendar.getTime(), "Hospital General", "completed"));
 
         filteredList.addAll(activitiesList);
         adapter.notifyDataSetChanged();
@@ -213,13 +191,8 @@ public class BuscarActividad extends AppCompatActivity implements filtros.Filter
         filteredList.clear();
 
         for (Activity activity : activitiesList) {
-            // Filtrar por fecha
             boolean matchesDate = dateFilter.isEmpty() || formatDate(activity.getDate()).contains(dateFilter);
-
-            // Filtrar por ubicación
             boolean matchesLocation = locationFilter.isEmpty() || activity.getLocation().toLowerCase().contains(locationFilter);
-
-            // Filtrar por estado
             boolean matchesStatus = (!cbCompleted.isChecked() && !cbUpcoming.isChecked() && !cbOngoing.isChecked()) ||
                     (cbCompleted.isChecked() && activity.getStatus().equals("completed")) ||
                     (cbUpcoming.isChecked() && activity.getStatus().equals("upcoming")) ||
@@ -244,7 +217,6 @@ public class BuscarActividad extends AppCompatActivity implements filtros.Filter
 
     @Override
     public void onFiltersApplied(String date, String location, String status) {
-        // Aplicar los filtros a la lista
         filteredList.clear();
 
         for (Activity activity : activitiesList) {
